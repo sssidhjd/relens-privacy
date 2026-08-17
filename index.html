@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ReLens 隐私政策</title>
+  <link rel="stylesheet" href="privacy.css">
+</head>
+<body>
+  <main class="policy-shell">
+    <header class="policy-header">
+      <div class="brand-mark" aria-hidden="true">R</div>
+      <div>
+        <span class="eyebrow">RELENS · PRIVACY</span>
+        <h1>隐私政策</h1>
+        <p>生效日期：2026 年 8 月 17 日 · 适用版本：1.8.1 中英与 JSON、悬浮窗</p>
+      </div>
+    </header>
+
+    <section class="summary">
+      <strong>一句话说明</strong>
+      <p>ReLens 只在你主动选择图片后，把本地裁剪或压缩的图片直接发送给你选择并授权的 API 服务商；开发者没有中转服务器，也不会收到图片、API Key 或分析历史。</p>
+    </section>
+
+    <section>
+      <h2>1. 单一用途与触发方式</h2>
+      <p>ReLens 通过一个全类型“专业反推”入口，把用户主动选择的一张网页图片、网页框选区域或本地图片转换为中文、英文生图提示词、负面提示词和结构化 JSON 视觉分析。扩展自动识别图片类型；识别为普通商品时会启用通用商品身份锁。它只会在右键图片、启动页面选图、拖拽框选、使用快捷键、上传图片或主动重试后运行，不会持续扫描网页、读取浏览历史或自动上传内容。</p>
+    </section>
+
+    <section>
+      <h2>2. 图片如何处理</h2>
+      <p>普通网页图片优先在本地读取原图像素；读取受限或超时后，才截取当前活动标签页的可见区域并按图片矩形裁剪。用户也可以拖拽框选 Canvas、视频可见帧、CSS 背景图、组合画面或任意网页局部。截图前后都会核对活动标签页，切换页面时丢弃截图。本地上传的 PNG、JPEG 或 WebP 在本地解码。所有输入发送前统一压缩为最长边不超过 1800 像素的 JPEG，单张输入上限为 8 MB；发送的是原图压缩结果或所选裁剪区域，不是完整网页截图。用于裁剪的截图不会进入历史或任务记录。</p>
+    </section>
+
+    <section>
+      <h2>3. API 服务商与发送数据</h2>
+      <p>当前版本支持 Google Gemini、OpenAI、Anthropic Claude，以及由用户填写 Base URL 的 OpenAI-compatible 接口。分析时仅向当前已保存并授权的服务商发送：所选图片、宽高比、补充要求、模型名称、内置分析指令和结构化输出规则。鉴权需要时，还会把该服务商对应的 API Key 放入请求 Header。</p>
+      <p>完整网页 URL、网页标题、图片源 URL、本地文件路径、其他服务商的 Key 和本机历史不会发送。官方云端与自定义云端必须使用 HTTPS；HTTP 仅允许严格的本机回环地址 <code>localhost</code>、<code>127.0.0.1</code> 或 <code>::1</code>。本地 HTTP 接口不应使用真实云端密钥。</p>
+      <p>第三方服务如何处理请求受用户账号、项目设置及该服务商条款约束。使用自定义接口前，用户应自行核对其运营方、隐私政策和数据保留方式。可参考 <a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer">Google 隐私政策</a>、<a href="https://openai.com/policies/privacy-policy/" target="_blank" rel="noreferrer">OpenAI 隐私政策</a>和<a href="https://www.anthropic.com/legal/privacy" target="_blank" rel="noreferrer">Anthropic 隐私政策</a>。</p>
+      <p>用户主动点击“连接并测试”时，扩展会发送扩展包内置的 32×32 非私人四色测试图，用于确认图片输入和结构化输出能力。测试结果不进入历史，但会产生少量 API 用量。</p>
+    </section>
+
+    <section>
+      <h2>4. API Key</h2>
+      <p>每个服务商的 Key 独立保存并绑定到对应服务商；自定义兼容接口还会绑定到规范化 Base URL。切换服务商或修改 Base URL 时不会复用其他 Key。Key 默认保存在 <code>chrome.storage.session</code>，浏览器会话结束后清除；只有用户主动开启“在本机持久保存”时才进入当前 Edge 配置文件的 <code>chrome.storage.local</code>。</p>
+      <p>已保存 Key 不会写入网页 DOM、扩展包、分析历史或导出文件，也不会在设置页回显。用户可以分别删除当前服务商 Key，并撤销当前 API 域名授权。</p>
+    </section>
+
+    <section>
+      <h2>5. 本地历史</h2>
+      <p>可选文字历史只保存在当前浏览器配置文件，最多可设为 100 条；只有最近 30 条记录可带在本机单独生成的低清缩略图。记录还包含时间、服务商名称、模型、来源域名和结构化分析文本。缩略图仅用于帮助辨认记录；历史不保存原图、完整裁剪图、Base URL、完整网页 URL、本地文件路径或 API Key。用户可以关闭历史、逐条删除、清空或主动导出 JSON；导出文件不包含缩略图。</p>
+    </section>
+
+    <section>
+      <h2>6. 权限</h2>
+      <ul>
+        <li><code>activeTab</code>：仅在用户手势后临时访问当前标签页，用于读取所选图片、框选可见区域和截图裁剪。</li>
+        <li><code>contextMenus</code>：增加图片右键分析入口。</li>
+        <li><code>scripting</code>：按需注入扩展包内脚本，用于选图、裁剪和显示结果卡。</li>
+        <li><code>storage</code>：保存本机设置、分服务商 Key、最多 100 条可选文字历史、最近 30 条低清缩略图，以及会话级任务状态和脱敏诊断。</li>
+        <li>可选主机权限：官方服务商只请求官方域名；自定义接口只在用户点击后请求所填的具体 HTTPS 主机。安装时不自动授予。HTTP 可选范围严格限于三个本机回环主机。</li>
+      </ul>
+      <p><code>https://*/*</code> 仅是 Manifest 中允许用户选择自定义 HTTPS API 的运行时权限上限，不代表安装时或使用时自动访问所有网站。ReLens 不申请 <code>&lt;all_urls&gt;</code>，也没有静态全站内容脚本。</p>
+    </section>
+
+    <section>
+      <h2>7. 开发者不收集的数据</h2>
+      <p>当前版本没有开发者服务器、账号系统、广告、分析 SDK、遥测或云同步。开发者不会接收用户图片、提示词、模型结果、API Key、浏览历史或本地设置。</p>
+    </section>
+
+    <section>
+      <h2>8. 安全、保留与控制</h2>
+      <p>API 请求地址由扩展内适配器构造并在附加 Key 前再次校验。网页内容脚本不能指定网络目标。扩展拒绝跨域重定向，限制请求与响应体积，并把远端响应只作为 JSON 数据严格校验，不会执行其中代码。</p>
+      <p>为了在关闭并重新打开 Popup 后恢复状态，当前浏览器会话最多保留 20 条任务记录，默认 24 小时过期。记录只含随机任务编号、状态、时间、经过大小限制的结果或固定错误码，不含图片、缩略图、补充要求、文件路径、完整网页 URL、请求正文或 Key。后台重启后，未完成任务会标记为“已中断”，不会自动重新上传图片。</p>
+      <p>失败诊断同样只保存在当前会话，采用严格字段白名单，最多 20 条。可复制内容不含 Key、Header、Cookie、图片/base64、提示词、补充要求、文件名、URL 路径、请求/响应正文或服务商原始错误文本。</p>
+      <p>用户可以删除任一服务商 Key、撤销域名权限、关闭或清空历史、禁用或卸载扩展。卸载时 Edge 会删除扩展所属本地存储。第三方 API 侧的数据保留由对应服务商或自定义接口运营方负责。</p>
+    </section>
+
+    <section>
+      <h2>9. 联系与政策变更</h2>
+      <p>发布者名称、支持方式与公开隐私政策地址以 Microsoft Edge Add-ons 商店详情页中的信息为准。</p>
+      <p class="publication-note">使用自定义 API 即表示用户自行选择该第三方接收图片。请只配置可信接口，并优先使用 HTTPS。</p>
+    </section>
+
+    <footer>ReLens · 本地优先 · 用户主动触发 · 多 API BYOK · 无远程代码</footer>
+  </main>
+</body>
+</html>
